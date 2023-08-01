@@ -1,7 +1,7 @@
 import copy
 
-from cw_backend.src.classes.other import geometry
-from cw_backend.src import settings
+from ..other import geometry
+from ... import settings
 
 tolerance = settings.settings["profile_end_tolerance"]
 

@@ -1,6 +1,6 @@
-from cw_backend.src.read_file import process_file
-from cw_backend.src.errors import verification
-from cw_backend.src.settings import settings
+from .read_file import process_file
+from .errors import verification
+from .settings import settings
 import os
 import flask_app
 

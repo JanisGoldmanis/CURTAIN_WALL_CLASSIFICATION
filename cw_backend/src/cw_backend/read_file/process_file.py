@@ -1,9 +1,9 @@
 import os
-from cw_backend.src.read_file import point_cloud, read_profile_csv
-from cw_backend.src.write_file import draw_svg, analyze_element_difference, analyze_jsons, write_json
-from cw_backend.src.classes.element_representation import opening
-from cw_backend.src import settings
-from cw_backend.src.errors import error_handling
+from . import point_cloud, read_profile_csv
+from ..classes.element_representation import opening
+from ..errors import error_handling
+from ..settings import settings
+from ..write_file import write_json, analyze_element_difference, analyze_jsons, draw_svg
 
 results = {"Errors": error_handling.errors}  # Store the results
 

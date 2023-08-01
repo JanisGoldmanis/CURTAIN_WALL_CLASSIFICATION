@@ -1,4 +1,4 @@
-from cw_backend.src.classes.other import geometry
+from ..other import geometry
 
 
 class Profile:

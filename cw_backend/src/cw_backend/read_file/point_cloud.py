@@ -1,7 +1,3 @@
-from cw_backend.src.read_file import read_openings_csv
-from cw_backend.src.classes.other import geometry
-
-
 def get_point_cloud_array(opening_report):
     # Get point cloud from Opening Report
     point_cloud = ReadOpeningCSVData.read_point_cloud_csv(opening_report)

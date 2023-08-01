@@ -1,4 +1,4 @@
-from cw_backend.src.errors import create_missing_data_folders
+from . import create_missing_data_folders
 
 
 def correct_amount_of_beams(element):

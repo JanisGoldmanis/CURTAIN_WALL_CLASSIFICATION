@@ -1,4 +1,4 @@
-from cw_backend.src.classes.element_representation import element as element_module
+from cw_backend.classes.element_representation import element as element_module
 
 import drawsvg as draw
 

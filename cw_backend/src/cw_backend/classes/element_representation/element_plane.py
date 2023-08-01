@@ -1,8 +1,8 @@
 import math
 
-from cw_backend.src.classes.element_representation import opening, profile
-from cw_backend.src.classes.other import geometry
-from cw_backend.src import settings
+from ..element_representation import profile, opening
+from ..other import geometry
+from ... import settings
 
 tolerance = settings.settings["profile_end_tolerance"]
 

@@ -1,5 +1,4 @@
 import csv
-from cw_backend.src.classes.other import geometry
 
 
 def transform_raw_to_point(data):

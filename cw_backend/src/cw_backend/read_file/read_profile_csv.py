@@ -1,7 +1,7 @@
 import csv
-from cw_backend.src.classes.element_representation import element as element_module, profile as profile_module
-from cw_backend.src.errors import verification, error_handling
-from cw_backend.src import settings
+from ..classes.element_representation import profile as profile_module, element as element_module
+from ..errors import error_handling, verification
+from .. import settings
 
 error_log_file = error_handling.errors
 
