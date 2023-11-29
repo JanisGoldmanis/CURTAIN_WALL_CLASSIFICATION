@@ -6,7 +6,7 @@ from ... import settings
 class Profile:
     def __init__(self, profile, length, guid, start_x, start_y, start_z, end_x, end_y, end_z, delivery_number):
         self.profile = profile
-        self.length = length
+
         self.guid = guid
         self.start = geometry.Point(start_x, start_y, start_z)
         self.global_start = geometry.Point(start_x, start_y, start_z)
@@ -14,6 +14,9 @@ class Profile:
         self.global_end = geometry.Point(end_x, end_y, end_z)
         self.direction = self.get_direction()
         self.delivery_number = delivery_number
+
+        self.length = length
+        self.length_axis = geometry.distance_2pt(self.start, self.end)
 
     def orient_points(self):
         """
@@ -117,28 +120,35 @@ def adjust_profile_lengths(bottom_profiles):
     first = bottom_profiles[0]
     second = bottom_profiles[1]
 
-    length_1_points = geometry.distance_2pt(first.start, first.end)
+    length_1_axis_length = first.length_axis
     length_1_attribute = first.length
 
-    length_2_points = geometry.distance_2pt(second.start, second.end)
+    length_2_axis_length = second.length_axis
     length_2_attribute = second.length
 
-    if abs(length_1_attribute - length_1_points) > 0.01:
+    if abs(length_1_attribute - length_1_axis_length) > 0.01:
         vector_1 = get_profile_vector(first).np
         start = first.start
         start_point = np.array([start.x, start.y, start.z])
         second_point = start_point + vector_1 * length_1_attribute
         first.end = geometry.Point(second_point[0], second_point[1], second_point[2])
 
-    if abs(length_2_attribute - length_2_points) > 0.01:
+        first.length_axis = geometry.distance_2pt(first.start, first.end)
+
+    if abs(length_2_attribute - length_2_axis_length) > 0.01:
         vector_2 = get_profile_vector(second).np
         start = second.start
         start_point = np.array([start.x, start.y, start.z])
 
-        length_difference = length_2_points - length_2_attribute
+        length_difference = length_2_axis_length - length_2_attribute
 
-        second_point = start_point + vector_2 * length_1_attribute
-        second.start = geometry.Point(second_point[0], second_point[1], second_point[2])
+        second_point = start_point + vector_2 * length_2_attribute
+        second.end = geometry.Point(second_point[0], second_point[1], second_point[2])
+
+
+        second.length_axis = geometry.distance_2pt(second.start, second.end)
+
+    return True
 
 
 

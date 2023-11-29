@@ -91,7 +91,7 @@ def draw_element(element, svg_folder):
 
     element_dimensions = element_module.get_element_dimensions(element)
 
-    max_level = element_module.get_element_max_level(element) + 1  # Depth level for opening recursion splitting
+    max_level = element_module.get_element_max_level(element)  # Depth level for opening recursion splitting
 
     # element_representation data
     height = element_dimensions["HEIGHT"]
@@ -104,32 +104,36 @@ def draw_element(element, svg_folder):
     d_width = element_width + 2 * border
 
     # Create canvas, only objects within canvas borders will be shown
-    d = draw.Drawing(d_width, d_height * max_level, origin=(0, 0))
+    d = draw.Drawing(d_width, d_height * (max_level + 1), origin=(0, 0))
 
     # To make organization easier, openings and their children are changed to different data structure
     openings = []
     for _ in range(len(element.element_planes)):
-        plane_openings = [[] for _ in range(max_level)]
-        openings.append(plane_openings)
+        plane_array = []
+        for _ in range(max_level+1):
+            plane_array.append([])
+        # plane_openings = [[] for _ in range(max_level)]
+        openings.append(plane_array)
 
     split_openings_in_opening_lists(element, openings)
     x_offsets = [0]
     for i in range(len(element.element_planes)-1):
         x_offsets.append(int(element.element_planes[i].width / scale))
 
+    # Create label above each level image
+    for level in range(max_level + 1):
+        add_level_title(d, level, element_height, element_width, border, scale, text_size=8)
+
     for i in range(len(element.element_planes)):
         plane_openings = openings[i]
         x_offset = x_offsets[i]
 
         # Generate image for each recursion level
-        for level in range(max_level):
+        for level in range(max_level+1):
             openings_in_level = plane_openings[level]
 
             # Used to control so that each profile is being drawn only once
             profiles_added = set()
-
-            # Create label above each level image
-            add_level_title(d, level, element_height, element_width, border, scale, text_size=8)
 
             for opening in openings_in_level:
 
@@ -152,7 +156,7 @@ def draw_element(element, svg_folder):
                         add_profile_to_drawing(d, profile, level, element_height, x_offset, perimeter_profile, border, scale)
 
                 # Add opaque opening rectangle
-                add_opening_to_drawing(d, opening, level, element_height, x_offset, border, scale, 150)
+                add_opening_to_drawing(d, opening, level, element_height, x_offset, border, scale, 75)
 
     d.set_pixel_scale(2)  # Set number of pixels per geometry unit
 

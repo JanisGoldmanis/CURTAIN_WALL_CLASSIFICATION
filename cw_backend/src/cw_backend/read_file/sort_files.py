@@ -35,8 +35,16 @@ def sort_files(file_dict, directory):
 
             # Hard coded checks regarding content of first line in reports
 
-            if first_line == ['PROFILE;LENGTH / mm;START_X;START_Y;START_Z;END_X;END_Y;END_Z;'
-                              'GUID;ASSEMBLY.GUID;DELIVERY_NUMBER']:
+            profile_string_list = [
+                ['PROFILE;LENGTH / mm;START_X / mm;START_Y / mm;START_Z / mm;END_X / mm;END_Y / mm;END_Z '
+                 '/ mm;GUID;ASSEMBLY.GUID;DELIVERY_NUMBER'],
+                ['PROFILE;LENGTH / mm;START_X;START_Y;START_Z;END_X;END_Y;END_Z;GUID;ASSEMBLY.GUID;DELIVERY_NUMBER;NAME']]
+
+
+
+            opening_string = ['NAME;ABREVIATION;CoG;ORIGIN;X;Y;Z;X_direction_size;Y_direction_size;GUID;ASSEMBLY_GUID']
+
+            if first_line in profile_string_list:
                 if recognized_files["profile_file"] is None:
                     recognized_files["profile_file"] = file_path
                     file_name = os.path.basename(file_path)
@@ -44,8 +52,7 @@ def sort_files(file_dict, directory):
                 else:
                     recognized_files["unknown_files"].append(file_path)
 
-            elif first_line == [
-                    'NAME;ABREVIATION;CoG;ORIGIN;X;Y;Z;X_direction_size;Y_direction_size;GUID;ASSEMBLY_GUID']:
+            elif first_line == opening_string:
                 if recognized_files["opening_file"] is None:
                     recognized_files["opening_file"] = file_path
                 else:
@@ -54,7 +61,5 @@ def sort_files(file_dict, directory):
                 recognized_files["unknown_files"].append(file_path)
 
     settings.settings["assign_opening_type"] = recognized_files["opening_file"] is not None
-
-
 
     return recognized_files

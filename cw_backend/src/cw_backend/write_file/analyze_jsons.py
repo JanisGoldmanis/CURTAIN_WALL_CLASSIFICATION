@@ -3,6 +3,7 @@ import json
 import csv
 from .. import settings
 from . import opening_report
+from . import profile_report
 
 
 def get_type_count(option1_list):
@@ -373,9 +374,8 @@ def get_type_tree(output_folder, json_folder):
 
 
 
-def add_bad_elements(bad_elements, output_folder):
-    file_name = "output_grouping.csv"
-    file_path = os.path.join(output_folder, file_name)
+def add_bad_elements(bad_elements, output_folder, project_name):
+    file_path = os.path.join(output_folder, project_name + "_output_grouping.csv")
 
     with open(file_path, 'a', newline='', encoding='UTF8') as file:
         writer = csv.writer(file, delimiter=';')

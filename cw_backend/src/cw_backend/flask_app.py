@@ -156,7 +156,7 @@ def run_process_file(filename, current_session):
         response = {
             'result': f'There is already an active session: {active_id}'
         }
-        return response
+        return response, 500
     response = {
         'filename': filename,
         'log': results

@@ -1,12 +1,8 @@
 import json
-import logging
 import os
 from ..classes.element_representation.element import get_opening_level
 
 accuracy = 2
-
-# Set up logging configuration
-logging.basicConfig(level=logging.WARNING, format='%(levelname)s - %(message)s')
 
 
 def delete_files_in_folder(folder_path):

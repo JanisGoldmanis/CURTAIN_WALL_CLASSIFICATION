@@ -1,4 +1,6 @@
 import os
+import traceback
+
 from . import point_cloud, read_profile_csv
 from ..write_file import draw_svg, analyze_element_difference, analyze_jsons
 from ..write_file import write_json
@@ -9,6 +11,9 @@ from ..errors import verification
 from ..read_file import sort_files
 from tqdm import tqdm
 from ..write_file import error_log
+from ..write_file import write_element_dimensions
+from ..write_file import profile_report as profile_report_module
+from ..write_file import profile_mistakes as profile_mistakes_module
 
 results = {"Errors": error_handling.errors}
 
@@ -59,7 +64,7 @@ def process_files(filenames):
     assign_opening_type = settings["assign_opening_type"]
 
     # Group profiles by GUID's into distinct element objects
-    elements, bad_elements = read_profile_csv.read_csv(profile_report)
+    elements, bad_elements, profiles = read_profile_csv.read_csv(profile_report)
 
     if not elements:
         return False
@@ -87,18 +92,30 @@ def process_files(filenames):
             bad_elements.append(element)
             elements.remove(element)
 
+    for element in elements[:]:
+        if not verification.perimeter_profiles_are_necessary_length(element):
+            bad_elements.append(element)
+            elements.remove(element)
+
     print('Assigning opening type, creating svg, json')
 
     for element in tqdm(elements[:]):
         if assign_opening_type:
             for plane in element.element_planes:
-                opening.find_opening_types_for_plane(plane, opening_data_tree, element.physical_openings)
+                try:
+                    opening.find_opening_types_for_plane(plane, opening_data_tree, element.physical_openings)
+                except Exception as e:
+                    traceback.print_exc()
+                    bad_elements.append(element)
+                    element.error = f"Couldn't determine opening types, {e}"
+                    continue
 
         if draw_element:
             try:
                 draw_svg.draw_element(element, svg_folder)
             except Exception as e:
-                elements.remove(element)
+                # elements.remove(element)
+                traceback.print_exc()
                 bad_elements.append(element)
                 element.error = f"Couldn't draw svg, {e}"
                 continue
@@ -107,9 +124,10 @@ def process_files(filenames):
             try:
                 write_json.write_json(element, json_folder)
             except Exception as e:
+                traceback.print_exc()
                 elements.remove(element)
                 bad_elements.append(element)
-                element.error = f"Couldn't draw svg, {e}"
+                element.error = f"Couldn't write json, {e}"
                 continue
 
     if analyze_json:
@@ -128,11 +146,17 @@ def process_files(filenames):
                 print(f'Unhandled exception during difference analysis:\n{e}')
                 return False
 
+    write_element_dimensions.generate_element_dimensions(output_folder, elements)
+
+    profile_mistakes_module.generate_profile_mistakes(output_folder, profiles)
+
+    profile_report_module.generate_profile_report(output_folder, elements)
+
     if len(bad_elements) > 0:
         print(f'\n{len(bad_elements)} Bad Elements')
         error_log.write_error_log(bad_elements, output_folder)
         if analyze_json:
-            analyze_jsons.add_bad_elements(bad_elements, output_folder)
+            analyze_jsons.add_bad_elements(bad_elements, output_folder, project_name)
 
     print('Finished')
 
