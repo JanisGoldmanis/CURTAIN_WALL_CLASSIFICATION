@@ -21,7 +21,7 @@ def distance_2pt(point1, point2):
 
     # calculate the Euclidean distance between the two points
     pt_distance = np.linalg.norm(point2np - point1np)
-    return pt_distance
+    return round(pt_distance, 2)
 
 
 def distance_point_to_line(point, profile):

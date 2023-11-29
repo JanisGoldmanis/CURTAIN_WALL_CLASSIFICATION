@@ -23,6 +23,6 @@ if __name__ == '__main__':
         flask_app.app.run()
     else:
         start = time.time()
-        # result = process_file.process_files({"files": ["Sickla6.csv", "SicklaOpenings2.csv"]})
-        result = process_file.process_files("SicklaSingleElement.csv")
+        # result = process_file.process_files("Sickla6.csv,SicklaOpenings3.csv")
+        result = process_file.process_files("ParkCentral5.csv,ParkCentralOpenings.csv")
         print('Time spent:', time.time()-start)

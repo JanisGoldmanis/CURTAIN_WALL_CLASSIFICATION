@@ -400,10 +400,9 @@ def keep_openings_with_similar_orientation(plane, openings):
 
 
 def get_ten_closest_openings(center, openings):
-    try:
-        openings = sorted(openings, key=lambda opening: geometry.distance_2pt(center, opening.center))
-    except:
-        test = ''
+
+    openings = sorted(openings, key=lambda opening: geometry.distance_2pt(center, opening.center))
+
     distance = []
 
     for opening in openings:
@@ -423,7 +422,7 @@ def get_projected_onto_openings(center, openings):
         x_dimension = opening.height
         y_dimension = opening.width
 
-        if 50 <= x <= x_dimension - 50 and 50 <= y <= y_dimension:
+        if 5 <= x <= x_dimension - 5 and 5 <= y <= y_dimension:
             result_openings.append(opening)
 
     return result_openings

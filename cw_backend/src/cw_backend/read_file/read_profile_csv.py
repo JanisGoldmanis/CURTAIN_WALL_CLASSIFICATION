@@ -35,6 +35,7 @@ def read_csv(file_path):
     # Second if, necessary it creates new element object and then adds profile to necessary element.
     previous_element_guid = set()
     elements = []
+    profiles = []
 
     with open(file_path, encoding='UTF-8') as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
@@ -82,6 +83,7 @@ def read_csv(file_path):
                         new_profile.start, new_profile.end = new_profile.end, new_profile.start
 
                     single_element.profiles.append(new_profile)
+                    profiles.append(new_profile)
 
     elements, bad_elements = verification.valid_or_invalid_elements(elements)
 
@@ -89,7 +91,7 @@ def read_csv(file_path):
         element_module.assign_delivery_number(element)
 
     delivery_numbers = set()
-    for element in elements+bad_elements:
+    for element in elements + bad_elements:
         if element.delivery_number in set():
             print(f'Duplicate {element.delivery_number}')
         delivery_numbers.add(element.delivery_number)
@@ -111,6 +113,4 @@ def read_csv(file_path):
             elements.remove(single_element)
             bad_elements.append(single_element)
 
-
-
-    return elements, bad_elements
+    return elements, bad_elements, profiles

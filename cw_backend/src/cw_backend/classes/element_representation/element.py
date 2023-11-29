@@ -68,7 +68,7 @@ def get_element_dimensions(element):
 
 def get_opening_level(opening, level):
     if len(opening.children) == 0:
-        return opening.level
+        return max(opening.level, level)
     else:
         child_levels = [level]
         for child in opening.children:

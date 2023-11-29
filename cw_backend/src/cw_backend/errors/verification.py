@@ -97,3 +97,33 @@ def check_files(files):
         return False
 
     return True
+
+
+def perimeter_profiles_are_necessary_length(element):
+    for element_plane in element.element_planes:
+        opening = element_plane.opening
+        left = opening.left
+        right = opening.right
+        top = opening.top
+        bottom = opening.bottom
+
+        height = opening.height
+        width = opening.width
+
+        if left is not None:
+            if abs(height - left.length) > 100:
+                element.error = 'Left profile is not sufficient length'
+                return False
+        if right is not None:
+            if abs(height - right.length) > 100:
+                element.error = 'Right profile is not sufficient length'
+                return False
+        if top is not None:
+            if abs(width - top.length) > 100:
+                element.error = 'Top profile is not sufficient length'
+                return False
+        if bottom is not None:
+            if abs(width - bottom.length) > 100:
+                element.error = 'Bottom profile is not sufficient length'
+                return False
+    return True
